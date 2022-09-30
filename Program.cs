@@ -1,8 +1,9 @@
-﻿Console.WriteLine();
+﻿using System.Data.Entity;
 
 E_commerce db = new E_commerce();
 
-List<Customer> customers = db.Customers.ToList<Customer>();
+//List<Customer> customers = db.Customers.ToList<Customer>();
+List<Customer> customers = (from c in db.Customers select c).ToList();
 
 if (customers.Count == 0)
 {
@@ -20,7 +21,8 @@ if (customers.Count == 0)
     customers = db.Customers.ToList<Customer>();
 }
 
-List<Employee> employees = db.Employees.ToList<Employee>();
+//List<Employee> employees = db.Employees.ToList<Employee>();
+List<Employee> employees = (from e in db.Employees select e).ToList();
 
 if (employees.Count == 0)
 {
@@ -45,12 +47,12 @@ if (products.Count == 0)
     Product product = new Product();
     product.Name = "Scrivania";
     product.Description = "Una bella scrivania";
-    product.Price = 129.99;
+    product.Price = 129.99F;
     db.Add(product);
     product = new Product();
     product.Name = "Lampada LED";
     product.Description = "Una bella lampada";
-    product.Price = 29.99;
+    product.Price = 29.99F;
     db.Add(product);
     db.SaveChanges();
     products = db.Products.ToList<Product>();
@@ -64,7 +66,7 @@ order.Products = new List<Product>();
 order.Products.Add(db.Products.Where(product => product.ProductId == 1).First());
 order.Products.Add(db.Products.Where(product => product.ProductId == 2).First());
 order.Status = "In lavorazione";
-double amount = 0;
+float amount = 0;
 foreach (Product product in order.Products)
 {
     amount += product.Price;
@@ -80,4 +82,6 @@ payment.Status = "Accettato";
 db.Add(payment);
 db.SaveChanges();
 List<Order> orders = db.Orders.ToList<Order>();
+
+Customer customerWithOrders = (from c in db.Customers where c.CustomerId == 1 select c).Include("Orders").First();
 
