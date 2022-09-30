@@ -8,7 +8,7 @@ public class Order
     public int OrderId { get; set; }
     public DateTime Date { get; set; }
     public double Amount { get; set; }
-    public bool Status { get; set; }
+    public string Status { get; set; }
 
     public int CustomerId { get; set; }
     public Customer Customer { get; set; }
